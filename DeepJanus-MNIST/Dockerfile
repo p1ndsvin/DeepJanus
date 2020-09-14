@@ -18,8 +18,8 @@ RUN touch /root/.ssh/known_hosts
 RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
 
 # Download the lastest from the repo and show the version on console
-RUN git clone git@github.com:testingautomated-usi/DeepJanus.git deepjanus && \
-    cd deepjanus && git checkout Tara && git pull --all && git log --pretty=oneline
+RUN git clone git@github.com:zohdit/DeepJanus.git deepjanus && \
+    cd deepjanus && git pull --all && git log --pretty=oneline
 
 # 
 FROM python:3.6
