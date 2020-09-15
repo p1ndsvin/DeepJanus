@@ -49,7 +49,7 @@ K_SD             = float(os.getenv('DJ_K_SD', '0.1'))
 K                = int(os.getenv('DJ_K', '1'))
 
 # Archive configuration
-ARCHIVE_THRESHOLD = float(os.getenv('ARCHIVE_THRESHOLD', '2.0'))
+ARCHIVE_THRESHOLD = float(os.getenv('ARCHIVE_THRESHOLD', '4.0'))
 
 GENERATE_ONE_ONLY = False
 
