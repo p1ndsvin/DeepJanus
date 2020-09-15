@@ -30,13 +30,17 @@ class MapElitesMNIST(MapElites):
             b = b + (i,)
         return b
 
-    def performance_measure(self, x, archive):
+    def evaluate_member(self, P_class_A, P_notclass_A):
+        P1 = P_class_A - P_notclass_A
+        return P1
+
+    def performance_measure(self, x):
         """
         Apply the fitness function to x
         """
-        # "calculate performance measure"    
-        pref = x.evaluate(archive)     
-        return pref
+        # "calculate performance measure" 
+        perf = self.evaluate_member(x.member1.P_class, x.member1.P_notclass)    
+        return perf
 
     def generate_feature_dimensions(self, type): 
         fts = list()

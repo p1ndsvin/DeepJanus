@@ -10,6 +10,7 @@ import keras
 import json
 import os
 import sys
+import copy
 
 # local imports
 import vectorization_tools
@@ -194,8 +195,8 @@ def run(dir_name, rand_seed=None):
                 ind.fitness.values = fit
 
             for ind in population + offspring:
-                # if ind.fitness.values[1] < 0:
-                archive.update_archive(ind)
+                if ind.fitness.values[1] < 0:
+                    archive.update_archive(ind)
 
             # Select the next generation population
             population = toolbox.select(population + offspring, POPSIZE)
@@ -237,8 +238,11 @@ def generate_maps(execution_time, iterations, dir_name):
             map_E = MapElitesMNIST(i, NGEN, POPSIZE, True, log_dir_path)               
             image_dir_path = Path(f'logs/{dir_name}/{log_dir_name}/{map_E.feature_dimensions[1].name}_{map_E.feature_dimensions[0].name}')
             image_dir_path.mkdir(parents=True, exist_ok=True)
-            for ind in archive.get_archive():             
-                map_E.place_in_mapelites(ind, archive.get_archive())
+            for ind in archive.get_archive():
+                copy_ind = copy.deepcopy(ind)
+                copy_ind.member1 = copy_ind.member2             
+                map_E.place_in_mapelites(ind)
+                map_E.place_in_mapelites(copy_ind)
 
             # rescale        
             map_E.solutions, map_E.performances = utils.rescale(map_E.solutions,map_E.performances)     

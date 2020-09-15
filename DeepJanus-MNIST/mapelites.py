@@ -49,7 +49,7 @@ class MapElites(ABC):
 
         print("Configuration completed.")
    
-    def place_in_mapelites(self, x, archive):
+    def place_in_mapelites(self, x):
         """
         Puts a solution inside the N-dimensional map of elites space.
         The following criteria is used:
@@ -63,8 +63,9 @@ class MapElites(ABC):
         """
         # get coordinates in the feature space
         b = self.map_x_to_b(x)
+
         # performance of the x
-        perf = self.performance_measure(x, archive)[1]
+        perf = self.performance_measure(x)
        
         reconstruct = False
         for i in range(len(b)):
@@ -73,7 +74,7 @@ class MapElites(ABC):
                 self.feature_dimensions[i].bins = b[i] + 1      
         
         if reconstruct:
-            self.recounstruct_map()
+            self.reconstruct_map()
 
         # place operator performs either minimization or maximization
         if self.place_operator(perf, self.performances[b]):
@@ -83,7 +84,7 @@ class MapElites(ABC):
         else:
             print(f"PLACE: Individual {x} rejected at {b} with perf: {perf} in favor of {self.performances[b]}")
 
-    def recounstruct_map(self):
+    def reconstruct_map(self):
         """
         Extend Map of elites dynamically if needed
         """
