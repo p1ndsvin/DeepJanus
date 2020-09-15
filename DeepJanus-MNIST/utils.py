@@ -1,6 +1,7 @@
 import matplotlib
 matplotlib.use('Agg')
 
+import os
 from os import makedirs
 from os.path import exists, basename
 from shutil import copyfile
@@ -165,7 +166,7 @@ def generate_reports(filename, dir_path):
     # write the header
     cf.writerow(["Features","Time","Covered seeds","Filled cells","Filled density", "Misclassified seeds","Misclassification","Misclassification density"])
     
-    jsons = [f for f in glob.glob(f"{dir_path}/*.json") if "Bitmaps_Moves" in f]
+    jsons = [f for f in sorted(glob.glob(f"{dir_path}/*.json"), key=os.path.getmtime) if "Bitmaps_Moves" in f]
     id = INTERVAL/60
     for json_data in jsons:
         with open(json_data) as json_file:
@@ -173,7 +174,7 @@ def generate_reports(filename, dir_path):
             cf.writerow(["Bitmaps,Moves",id,data["Covered seeds"],data["Filled cells"],data["Filled density"],data["Misclassified seeds"],data["Misclassification"],data["Misclassification density"]])
             id += (INTERVAL/60)
 
-    jsons = [g for g in glob.glob(f"{dir_path}/*.json") if "Orientation_Moves" in g]
+    jsons = [g for g in  sorted(glob.glob(f"{dir_path}/*.json"), key=os.path.getmtime) if "Orientation_Moves" in g]
     id = INTERVAL/60
     for json_data in jsons:
         with open(json_data) as json_file:
@@ -181,7 +182,7 @@ def generate_reports(filename, dir_path):
             cf.writerow(["Orientation,Moves",id,data["Covered seeds"],data["Filled cells"],data["Filled density"],data["Misclassified seeds"],data["Misclassification"],data["Misclassification density"]])
             id += (INTERVAL/60)
 
-    jsons = [h for h in glob.glob(f"{dir_path}/*.json") if "Bitmaps_Orientation" in h]
+    jsons = [h for h in sorted(glob.glob(f"{dir_path}/*.json"), key=os.path.getmtime) if "Bitmaps_Orientation" in h]
     id = INTERVAL/60
     for json_data in jsons:
         with open(json_data) as json_file:

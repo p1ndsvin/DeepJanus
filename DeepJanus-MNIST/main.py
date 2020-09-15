@@ -194,8 +194,8 @@ def run(dir_name, rand_seed=None):
                 ind.fitness.values = fit
 
             for ind in population + offspring:
-                if ind.fitness.values[1] < 0:
-                    archive.update_archive(ind)
+                # if ind.fitness.values[1] < 0:
+                archive.update_archive(ind)
 
             # Select the next generation population
             population = toolbox.select(population + offspring, POPSIZE)
