@@ -280,7 +280,8 @@ def generate_maps(execution_time, iterations, dir_name):
             file.close()
 
             map_E.plot_map_of_elites()
-     
+            plot_utils.plot_fives(f"logs/{dir_name}/{log_dir_name}", map_E.feature_dimensions[1].name, map_E.feature_dimensions[0].name)  
+
             repo = {
                 "Run time": str(execution_time),
                 f"{map_E.feature_dimensions[1].name}_min": map_E.feature_dimensions[1].min,
