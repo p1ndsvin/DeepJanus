@@ -290,7 +290,7 @@ def generate_maps(execution_time, iterations, dir_name):
                 f"{map_E.feature_dimensions[0].name}_max": map_E.feature_dimensions[0].bins,
                 "Performances": map_E.performances.tolist()
             }
-            filename = f"logs/{dir_name}/results_{map_E.feature_dimensions[1].name}_{map_E.feature_dimensions[0].name}.json"
+            filename = f"logs/{dir_name}/results_{map_E.feature_dimensions[1].name}_{map_E.feature_dimensions[0].name}_{execution_time}.json"
             with open(filename, 'w') as f:
                 f.write(json.dumps(repo))
           
@@ -302,6 +302,5 @@ if __name__ == "__main__":
     dir_name = f"temp_{now}" 
     pop = run(dir_name)
     
-    filename = f"logs/{dir_name}/results_{now}"
-    utils.generate_reports(filename, f"logs/{dir_name}")
+
 
