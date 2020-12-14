@@ -272,7 +272,7 @@ def generate_maps(execution_time, iterations, dir_name):
                 'Performances': map_E.performances.tolist()
                 
             }  
-            dst = f"logs/{dir_name}/report_"+ map_E.feature_dimensions[1].name +'_'+ map_E.feature_dimensions[0].name+ '_'+ str(execution_time) +'.json'
+            dst = f"logs/{dir_name}/{log_dir_name}/report_"+ map_E.feature_dimensions[1].name +'_'+ map_E.feature_dimensions[0].name+ '_'+ str(execution_time) +'.json'
             report_string = json.dumps(report)
 
             file = open(dst, 'w')
@@ -290,7 +290,7 @@ def generate_maps(execution_time, iterations, dir_name):
                 f"{map_E.feature_dimensions[0].name}_max": map_E.feature_dimensions[0].bins,
                 "Performances": map_E.performances.tolist()
             }
-            filename = f"logs/{dir_name}/results_{map_E.feature_dimensions[1].name}_{map_E.feature_dimensions[0].name}_{execution_time}.json"
+            filename = f"logs/{dir_name}/{log_dir_name}/results_{map_E.feature_dimensions[1].name}_{map_E.feature_dimensions[0].name}_{execution_time}.json"
             with open(filename, 'w') as f:
                 f.write(json.dumps(repo))
           
