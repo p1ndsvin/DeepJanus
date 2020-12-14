@@ -93,7 +93,7 @@ def print_image(filename, image, cmap=''):
         plt.imsave(filename, image.reshape(28, 28), cmap='gray') 
     else:
         plt.imsave(filename, image.reshape(28, 28)) 
-        np.save(filename, image)
+    np.save(filename, image)
 
 
 def bitmap_count(digit, threshold): 
@@ -159,6 +159,25 @@ def rescale(solutions, perfs, new_min = 0, new_max = 24):
                 output2[new_i,new_j] = value
                 output1[new_i,new_j] = solutions[i,j]
     return output1, output2
+
+def new_rescale(features, perfs, new_min_1, new_max_1, new_min_2, new_max_2):
+    shape_1 = new_max_1 - new_min_1 + 1
+    shape_2 = new_max_2 - new_min_2 + 1
+    output2 = np.full((shape_2, shape_1), np.inf, dtype=(float))
+
+    old_min_i = 0
+    old_min_j = 0
+    old_max_i = perfs.shape[0]
+    old_max_j = perfs.shape[1]
+
+    for (i, j), value in np.ndenumerate(perfs):
+        new_j = int(((new_max_1 - new_min_1) / (old_max_j - old_min_j)) * j - new_min_1)
+        new_i = int(((new_max_2 - new_min_2) / (old_max_i - old_min_i)) * i - new_min_2)
+        if value != np.inf:
+            if output2[new_i, new_j] == np.inf or value < output2[new_i, new_j]:
+                output2[new_i, new_j] = value
+                #output1[new_i, new_j] = solutions[i, j]
+    return output2
 
 def generate_reports(filename, dir_path): 
     filename = filename + ".csv"

@@ -215,7 +215,7 @@ def run(dir_name, rand_seed=None):
             print(logbook.stream)
 
     print(logbook.stream)
-
+    generate_maps((INTERVAL*ii/60), gen, dir_name)
     endtime = time.time()
     elapsedtime = endtime - starttime
     print(f"Running time {time.strftime('%H:%M:%S', time.gmtime(elapsedtime))}")        
@@ -244,9 +244,6 @@ def generate_maps(execution_time, iterations, dir_name):
                 map_E.place_in_mapelites(ind)
                 map_E.place_in_mapelites(copy_ind)
 
-            # rescale        
-            map_E.solutions, map_E.performances = utils.rescale(map_E.solutions,map_E.performances)     
-
             # filled values                                 
             filled = np.count_nonzero(map_E.solutions!=None)
             total = np.size(map_E.solutions)
@@ -267,11 +264,12 @@ def generate_maps(execution_time, iterations, dir_name):
 
             report = {               
                 'Covered seeds' : len(covered_seeds),
-                'Filled cells': str(filled),
-                'Filled density': str(filled_density),
+                'Filled cells': filled,
+                'Filled density': filled_density,
                 'Misclassified seeds': len(mis_seeds),
-                'Misclassification': str(Individual.COUNT_MISS),
-                'Misclassification density': str(Individual.COUNT_MISS/filled)
+                'Misclassification': Individual.COUNT_MISS,
+                'Misclassification density': Individual.COUNT_MISS/filled,
+                'Performances': map_E.performances.tolist()
                 
             }  
             dst = f"logs/{dir_name}/report_"+ map_E.feature_dimensions[1].name +'_'+ map_E.feature_dimensions[0].name+ '_'+ str(execution_time) +'.json'
@@ -282,7 +280,18 @@ def generate_maps(execution_time, iterations, dir_name):
             file.close()
 
             map_E.plot_map_of_elites()
-            plot_utils.plot_fives(f"logs/{dir_name}/{log_dir_name}", map_E.feature_dimensions[1].name, map_E.feature_dimensions[0].name)  
+     
+            repo = {
+                "Run time": str(execution_time),
+                f"{map_E.feature_dimensions[1].name}_min": map_E.feature_dimensions[1].min,
+                f"{map_E.feature_dimensions[1].name}_max": map_E.feature_dimensions[1].bins,
+                f"{map_E.feature_dimensions[0].name}_min": map_E.feature_dimensions[0].min,
+                f"{map_E.feature_dimensions[0].name}_max": map_E.feature_dimensions[0].bins,
+                "Performances": map_E.performances.tolist()
+            }
+            filename = f"logs/{dir_name}/results_{map_E.feature_dimensions[1].name}_{map_E.feature_dimensions[0].name}.json"
+            with open(filename, 'w') as f:
+                f.write(json.dumps(repo))
           
 
 
