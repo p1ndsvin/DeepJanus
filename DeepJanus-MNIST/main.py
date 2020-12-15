@@ -107,10 +107,11 @@ def evaluate_individual(individual, current_solution):
 def mutate_individual(individual):
     Individual.COUNT += 1
     # Select one of the two members of the individual.
+    digit_seed = generate_digit(individual.seed)
     if random.getrandbits(1):
-        distance_inputs = DigitMutator(individual.member1).mutate(reference=individual.member2)
+        distance_inputs = DigitMutator(individual.member1).mutate(reference=individual.member2, seed=digit_seed)
     else:
-        distance_inputs = DigitMutator(individual.member2).mutate(reference=individual.member1)
+        distance_inputs = DigitMutator(individual.member2).mutate(reference=individual.member1, seed=digit_seed)
     individual.reset()
     individual.distance = distance_inputs
 
@@ -126,6 +127,7 @@ def run(dir_name, rand_seed=None):
     random.seed(rand_seed)
     start_time = datetime.now()
     starttime = time.time()
+    Individuals = [] # all individuals
 
     stats = tools.Statistics(lambda ind: ind.fitness.values)
     stats.register("min", np.min, axis=0)
@@ -197,6 +199,7 @@ def run(dir_name, rand_seed=None):
             for ind in population + offspring:
                 if ind.fitness.values[1] < 0:
                     archive.update_archive(ind)
+                Individuals.append(ind)
 
             # Select the next generation population
             population = toolbox.select(population + offspring, POPSIZE)
@@ -215,7 +218,8 @@ def run(dir_name, rand_seed=None):
             print(logbook.stream)
 
     print(logbook.stream)
-    generate_maps(elapsed_time, gen, dir_name)
+    generate_maps(elapsed_time, gen, dir_name, archive.get_archive())
+    generate_maps(elapsed_time, gen, dir_name+"_all", Individuals)
     endtime = time.time()
     elapsedtime = endtime - starttime
     print(f"Running time {time.strftime('%H:%M:%S', time.gmtime(elapsedtime))}")        
@@ -223,13 +227,13 @@ def run(dir_name, rand_seed=None):
     return population
 
 
-def generate_maps(execution_time, iterations, dir_name):    
+def generate_maps(execution_time, iterations, dir_name, individuals):    
     # The experiment folder
     now = datetime.now().strftime("%Y%m%d%H%M%S")    
     log_dir_name = "log_"+str(POPSIZE)+"_"+str(iterations)+"_"+str(execution_time)+"_"+str(now) 
     log_dir_path = Path('logs/'+str(dir_name)+"/"+str(log_dir_name))
     log_dir_path.mkdir(parents=True, exist_ok=True)   
-    if len(archive.get_archive()) > 0:
+    if len(individuals) > 0:
         ''' type #1 : Moves & Bitmaps
             type #2 : Moves & Orientation
             type #3 : Orientation & Bitmaps
@@ -238,7 +242,7 @@ def generate_maps(execution_time, iterations, dir_name):
             map_E = MapElitesMNIST(i, NGEN, POPSIZE, True, log_dir_path)               
             image_dir_path = Path(f'logs/{dir_name}/{log_dir_name}/{map_E.feature_dimensions[1].name}_{map_E.feature_dimensions[0].name}')
             image_dir_path.mkdir(parents=True, exist_ok=True)
-            for ind in archive.get_archive():
+            for ind in individuals:
                 copy_ind = copy.deepcopy(ind)
                 copy_ind.member1 = copy_ind.member2             
                 map_E.place_in_mapelites(ind)
