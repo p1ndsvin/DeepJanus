@@ -12,7 +12,7 @@ class DigitMutator:
     def __init__(self, digit):
         self.digit = digit
 
-    def mutate(self, reference=None, seed):
+    def mutate(self, reference=None, seed=None):
         # Select mutation operator.
         rand_mutation_probability = random.uniform(0, 1)
         if rand_mutation_probability >= MUTOPPROB:
