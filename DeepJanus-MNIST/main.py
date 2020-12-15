@@ -203,11 +203,11 @@ def run(dir_name, rand_seed=None):
 
             # Generate maps
             elapsed_time = datetime.now() - start_time
-            if (elapsed_time.seconds) >= INTERVAL*ii:
-                print("generating map")                
-                #archive.create_report(x_test, Individual.SEEDS, gen)
-                generate_maps((INTERVAL*ii/60), gen, dir_name)
-                ii += 1
+            # if (elapsed_time.seconds) >= INTERVAL*ii:
+            #     print("generating map")                
+            #     #archive.create_report(x_test, Individual.SEEDS, gen)
+            #     generate_maps((INTERVAL*ii/60), gen, dir_name)
+            #     ii += 1
 
             # Update the statistics with the new population
             record = stats.compile(population)
@@ -215,7 +215,7 @@ def run(dir_name, rand_seed=None):
             print(logbook.stream)
 
     print(logbook.stream)
-    generate_maps((INTERVAL*ii/60), gen, dir_name)
+    generate_maps(elapsed_time, gen, dir_name)
     endtime = time.time()
     elapsedtime = endtime - starttime
     print(f"Running time {time.strftime('%H:%M:%S', time.gmtime(elapsedtime))}")        
