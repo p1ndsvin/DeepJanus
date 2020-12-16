@@ -228,7 +228,7 @@ def run(dir_name, rand_seed=None):
     log_dir_name = "log_"+str(now) 
     dir_path = Path('logs/'+(log_dir_name))
     dir_path.mkdir(parents=True, exist_ok=True)   
-    dir_path_all = Path('logs/'+(log_dir_name))
+    dir_path_all = Path('logs/'+(log_dir_name)+"_all")
     dir_path_all.mkdir(parents=True, exist_ok=True)   
 
     ii = 1
