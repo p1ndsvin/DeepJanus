@@ -20,7 +20,7 @@ class Individual:
         self.aggregate_ff = None
         self.member1 = member1
         self.member2 = member2
-        now = datetime.now().strftime("%Y%m%d%H%M%S")
+        now = datetime.now()
         file_name = "mbr" + str(now)
         utils.export_image(str(DIR_PATH) + "/" + file_name, self)
 
