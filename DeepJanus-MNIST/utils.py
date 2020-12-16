@@ -95,6 +95,19 @@ def print_image(filename, image, cmap=''):
         plt.imsave(filename, image.reshape(28, 28)) 
     np.save(filename, image)
 
+def export_image(filename, image):
+    plt.imsave(filename, image.member.purified.reshape(28, 28), cmap='gray')
+    np.save(filename, image)
+    digit = {
+            "xml_desc": image.member.xml_desc,
+            "seed": image.seed
+
+    }
+    digit_string = json.dumps(digit)
+
+    file = open(filename+".json", 'w')
+    file.write(digit_string)
+    file.close()
 
 def bitmap_count(digit, threshold): 
     image = copy.deepcopy(digit.purified)   

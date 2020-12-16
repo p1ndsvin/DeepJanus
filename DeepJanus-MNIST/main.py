@@ -218,11 +218,30 @@ def run(dir_name, rand_seed=None):
             print(logbook.stream)
 
     print(logbook.stream)
-    generate_maps(elapsed_time, gen, dir_name, archive.get_archive())
-    generate_maps(elapsed_time, gen, dir_name+"_all", Individuals)
+    # generate_maps(elapsed_time, gen, dir_name, archive.get_archive())
+    # generate_maps(elapsed_time, gen, dir_name+"_all", Individuals)
     endtime = time.time()
     elapsedtime = endtime - starttime
     print(f"Running time {time.strftime('%H:%M:%S', time.gmtime(elapsedtime))}")        
+
+    now = datetime.now().strftime("%Y%m%d%H%M%S")    
+    log_dir_name = "log_"+str(now) 
+    dir_path = Path('logs/'+(log_dir_name))
+    dir_path.mkdir(parents=True, exist_ok=True)   
+    dir_path_all = Path('logs/'+(log_dir_name))
+    dir_path_all.mkdir(parents=True, exist_ok=True)   
+
+    ii = 1
+    for ind in Individuals:
+        file_name = "mbr" + str(ii)
+        utils.export_image(str(dir_path_all) + "/" + file_name, ind)
+        ii += 1
+
+    ii = 1
+    for mis in archive.get_archive():
+        file_name = "mbr" + str(ii)
+        utils.export_image(str(dir_path) + "/" + file_name, mis)
+        ii += 1
 
     return population
 
