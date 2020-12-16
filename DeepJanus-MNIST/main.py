@@ -20,7 +20,7 @@ import archive_manager
 from individual import Individual
 from properties import NGEN, IMG_SIZE, \
     EXPECTED_LABEL, INITIALPOP, \
-    ORIGINAL_SEEDS, RESEEDUPPERBOUND, GENERATE_ONE_ONLY, RUNTIME, INTERVAL, POPSIZE, DIR_PATH
+    ORIGINAL_SEEDS, RESEEDUPPERBOUND, GENERATE_ONE_ONLY, RUNTIME, INTERVAL, POPSIZE, DIR_PATH, NOW
 from mapelites_mnist import MapElitesMNIST
 import utils
 import plot_utils
@@ -125,14 +125,14 @@ toolbox.register("mutate", mutate_individual)
 
 def run(dir_name, rand_seed=None):
 
-    now = datetime.now().strftime("%Y%m%d%H%M%S")    
-    log_dir_name = "log_"+str(now) 
+        
+    log_dir_name = "log_"+ NOW
     dir_path = Path('logs/'+(log_dir_name))
     dir_path.mkdir(parents=True, exist_ok=True)   
-    dir_path_all = Path('logs/'+(log_dir_name)+"_all")
+    dir_path_all = Path(DIR_PATH)
     dir_path_all.mkdir(parents=True, exist_ok=True)   
-    DIR_PATH = dir_path_all
-    
+
+
     random.seed(rand_seed)
     start_time = datetime.now()
     starttime = time.time()

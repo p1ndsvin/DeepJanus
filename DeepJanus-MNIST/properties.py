@@ -1,5 +1,8 @@
 # Make sure that any of this properties can be overridden using env.properties
 import os
+from datetime import datetime
+
+now = datetime.now().strftime("%Y%m%d%H%M%S")
 
 # GA Setup
 POPSIZE          = int(os.getenv('DJ_POPSIZE', '800'))
@@ -58,4 +61,5 @@ PATH              = os.getenv('PATH','vectorized_images_GA')
 TESTSOURCEPATH    = os.getenv('TESTSOURCEPATH','source_images_GA')
 TRAINSOURCEPATH   = os.getenv('TRAINSOURCEPATH', 'source_images_trainset')
 RESULTS_PATH      = os.getenv('RESULTS_PATH', 'results')
-DIR_PATH           =  os.getenv('DIR_PATH','Log')
+DIR_PATH           =  os.getenv('DIR_PATH','logs/log_' + str(now) + "_all")
+NOW             = os.getenv('NOW',str(now))
