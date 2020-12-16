@@ -3,8 +3,9 @@ import keras
 
 import evaluator
 from predictor import Predictor
-from properties import EXPECTED_LABEL, num_classes
-
+from properties import EXPECTED_LABEL, num_classes, DIR_PATH
+import utils
+from datetime import datetime
 
 class Individual:
     # Global counter of all the individuals (it is increased each time an individual is created or mutated).
@@ -19,6 +20,9 @@ class Individual:
         self.aggregate_ff = None
         self.member1 = member1
         self.member2 = member2
+        now = datetime.now().strftime("%Y%m%d%H%M%S")
+        file_name = "mbr" + str(now)
+        utils.export_image(str(DIR_PATH) + "/" + file_name, self)
 
     def reset(self):
         self.distance = None

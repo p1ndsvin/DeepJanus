@@ -20,7 +20,7 @@ import archive_manager
 from individual import Individual
 from properties import NGEN, IMG_SIZE, \
     EXPECTED_LABEL, INITIALPOP, \
-    ORIGINAL_SEEDS, RESEEDUPPERBOUND, GENERATE_ONE_ONLY, RUNTIME, INTERVAL, POPSIZE
+    ORIGINAL_SEEDS, RESEEDUPPERBOUND, GENERATE_ONE_ONLY, RUNTIME, INTERVAL, POPSIZE, DIR_PATH
 from mapelites_mnist import MapElitesMNIST
 import utils
 import plot_utils
@@ -124,6 +124,15 @@ toolbox.register("mutate", mutate_individual)
 
 
 def run(dir_name, rand_seed=None):
+
+    now = datetime.now().strftime("%Y%m%d%H%M%S")    
+    log_dir_name = "log_"+str(now) 
+    dir_path = Path('logs/'+(log_dir_name))
+    dir_path.mkdir(parents=True, exist_ok=True)   
+    dir_path_all = Path('logs/'+(log_dir_name)+"_all")
+    dir_path_all.mkdir(parents=True, exist_ok=True)   
+    DIR_PATH = dir_path_all
+    
     random.seed(rand_seed)
     start_time = datetime.now()
     starttime = time.time()
@@ -224,18 +233,6 @@ def run(dir_name, rand_seed=None):
     elapsedtime = endtime - starttime
     print(f"Running time {time.strftime('%H:%M:%S', time.gmtime(elapsedtime))}")        
 
-    now = datetime.now().strftime("%Y%m%d%H%M%S")    
-    log_dir_name = "log_"+str(now) 
-    dir_path = Path('logs/'+(log_dir_name))
-    dir_path.mkdir(parents=True, exist_ok=True)   
-    dir_path_all = Path('logs/'+(log_dir_name)+"_all")
-    dir_path_all.mkdir(parents=True, exist_ok=True)   
-
-    ii = 1
-    for ind in Individuals:
-        file_name = "mbr" + str(ii)
-        utils.export_image(str(dir_path_all) + "/" + file_name, ind)
-        ii += 1
 
     ii = 1
     for mis in archive.get_archive():
