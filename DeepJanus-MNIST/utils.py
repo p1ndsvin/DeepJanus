@@ -97,7 +97,7 @@ def print_image(filename, image, cmap=''):
 
 def export_image(filename, image):
     filename1 = filename + "_1"
-    plt.imsave(filename1, image.member1.purified.reshape(28, 28), cmap='gray')
+    #plt.imsave(filename1, image.member1.purified.reshape(28, 28), cmap='gray')
     np.save(filename1, image.member1.purified)
     digit = {
             "xml_desc": image.member1.xml_desc,
@@ -111,7 +111,7 @@ def export_image(filename, image):
     file.close()
 
     filename2 = filename + "_2"
-    plt.imsave(filename2, image.member2.purified.reshape(28, 28), cmap='gray')
+    #plt.imsave(filename2, image.member2.purified.reshape(28, 28), cmap='gray')
     np.save(filename2, image.member2.purified)
     digit2 = {
             "xml_desc": image.member2.xml_desc,
