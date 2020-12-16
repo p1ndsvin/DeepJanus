@@ -96,17 +96,32 @@ def print_image(filename, image, cmap=''):
     np.save(filename, image)
 
 def export_image(filename, image):
-    plt.imsave(filename, image.member.purified.reshape(28, 28), cmap='gray')
-    np.save(filename, image)
+    filename1 = filename + "_1"
+    plt.imsave(filename1, image.member1.purified.reshape(28, 28), cmap='gray')
+    np.save(filename1, image.member1.purified)
     digit = {
-            "xml_desc": image.member.xml_desc,
+            "xml_desc": image.member1.xml_desc,
             "seed": image.seed
 
     }
     digit_string = json.dumps(digit)
 
-    file = open(filename+".json", 'w')
+    file = open(filename1+".json", 'w')
     file.write(digit_string)
+    file.close()
+
+    filename2 = filename + "_2"
+    plt.imsave(filename2, image.member2.purified.reshape(28, 28), cmap='gray')
+    np.save(filename2, image.member2.purified)
+    digit2 = {
+            "xml_desc": image.member2.xml_desc,
+            "seed": image.seed
+
+    }
+    digit_string2 = json.dumps(digit2)
+
+    file = open(filename2+".json", 'w')
+    file.write(digit_string2)
     file.close()
 
 def bitmap_count(digit, threshold): 
