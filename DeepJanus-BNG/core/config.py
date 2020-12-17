@@ -8,6 +8,8 @@ class Config:
     INITIAL_NODE = (0.0, 0.0, -28.0, 8.0)
     ROAD_BBOX_SIZE = (-250, 0, 250, 500)
 
+    EXECTIME = 0
+
     def __init__(self):
         self.experiment_name = 'exp'
         self.fitness_weights = (1.0, -1.0)
@@ -32,3 +34,6 @@ class Config:
         #self.generator_name = Config.GEN_RANDOM_SEEDED
         self.generator_name = Config.GEN_SEQUENTIAL_SEEDED
         self.seed_folder = 'population_HQ1'
+
+        self.RUNTIME = 3600
+        self.INTERVAL = 900
