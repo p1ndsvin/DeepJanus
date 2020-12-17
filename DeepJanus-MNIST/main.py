@@ -226,6 +226,7 @@ def run(dir_name, rand_seed=None):
             logbook.record(gen=gen, evals=len(invalid_ind), **record)
             print(logbook.stream)
 
+
     print(logbook.stream)
     # generate_maps(elapsed_time, gen, dir_name, archive.get_archive())
     # generate_maps(elapsed_time, gen, dir_name+"_all", Individuals)
