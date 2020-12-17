@@ -3,6 +3,7 @@ class Config:
     GEN_RANDOM_SEEDED = 'GEN_RANDOM_SEEDED'
     GEN_SEQUENTIAL_SEEDED = 'GEN_SEQUENTIAL_SEEDED'
 
+
     SEG_LENGTH = 25
     NUM_SPLINE_NODES =10
     INITIAL_NODE = (0.0, 0.0, -28.0, 8.0)
@@ -33,7 +34,9 @@ class Config:
         #self.generator_name = Config.GEN_RANDOM
         #self.generator_name = Config.GEN_RANDOM_SEEDED
         self.generator_name = Config.GEN_SEQUENTIAL_SEEDED
-        self.seed_folder = 'population_HQ1'
+        #self.seed_folder = 'population_HQ1'
+
+        self.seed_folder = 'random_population'
 
         self.RUNTIME = 3600
         self.INTERVAL = 900
