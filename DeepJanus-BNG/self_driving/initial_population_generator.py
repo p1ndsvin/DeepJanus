@@ -1,8 +1,5 @@
 import json
 
-from core.archive_impl import SmartArchive
-from self_driving.beamng_config import BeamNGConfig
-from self_driving.beamng_problem import BeamNGProblem
 from core.config import Config
 from core.folder_storage import SeedStorage
 import os, glob, json
@@ -11,16 +8,21 @@ from shutil import copy
 from core.seed_pool_impl import SeedPoolFolder, SeedPoolRandom
 from self_driving.edit_distance_polyline import iterative_levenshtein
 
-config = BeamNGConfig()
-problem = BeamNGProblem(config, SmartArchive(config.ARCHIVE_THRESHOLD))
+
 
 def get_spine(member):
-    spine = json.loads(open(member).read())['sample_nodes']
-    return spine
+    print("member: ", member)
+    with open(member) as json_file:
+        spine = json.load(json_file)
+        return spine['sample_nodes']
 
 def get_min_distance_from_set(ind, solution):
     distances = list()
+    # print("ind:", ind)
+    # print("solution:", solution)
     ind_spine = get_spine(ind)
+
+
     for road in solution:
         road_spine = get_spine(road)
         distances.append(iterative_levenshtein(ind_spine, road_spine))
@@ -28,17 +30,17 @@ def get_min_distance_from_set(ind, solution):
     return distances[0]
 
 
-def initial_pool_generator():
+def initial_pool_generator(config, problem):
     good_members_found = 0
     attempts = 0
-    storage = SeedStorage('prova_roads')
+    storage = SeedStorage('initial_pool')
 
-    while good_members_found < 40:
+    while good_members_found < config.POOLSIZE:#40:
         path = storage.get_path_by_index(good_members_found + 1)
-        if path.exists():
-            print('member already exists', path)
-            good_members_found += 1
-            continue
+        # if path.exists():
+        #     print('member already exists', path)
+        #     good_members_found += 1
+        #     continue
         attempts += 1
         print(f'attempts {attempts} good {good_members_found} looking for {path}')
         member = problem.generate_random_member()
@@ -54,11 +56,10 @@ def initial_pool_generator():
         good_members_found += 1
         path.write_text(json.dumps(member.to_dict()))
 
-    return path
+    return storage.folder
 
-def initial_population_generator(path):
-
-    all_roads = [filename for filename in glob.glob(path)]
+def initial_population_generator(path, config, problem):
+    all_roads = [filename for filename in glob.glob(str(path)+"\*.json", recursive=True)]
     #all_roads += [filename for filename in glob.glob(path2)]
 
     shuffle(all_roads)
@@ -70,12 +71,13 @@ def initial_population_generator(path):
     original_set = list()
     original_set.append(starting_point)
 
-    popsize = 12
+    popsize = config.POPSIZE
 
     i = 0
     while i < popsize-1:
         max_dist = 0
         for ind in roads:
+
             dist = get_min_distance_from_set(ind, original_set)
             if dist > max_dist:
                 max_dist = dist
@@ -83,14 +85,14 @@ def initial_population_generator(path):
         original_set.append(best_ind)
         i += 1
 
-    base = config.seed_folder
-    seed_pool = SeedPoolFolder(problem, config.seed_folder)
-    if not os.path.exists(seed_pool.path):
-        os.makedirs(base)
+    base = config.initial_population_folder
+    storage = SeedStorage(base)
     for index, road in enumerate(original_set):
-        dst = os.path.join(base,'seed'+str(index)+'.json')
+        path = storage.get_path_by_index(index + 1)
+        dst = path
         copy(road,dst)
 
 if __name__ == '__main__':
     path = initial_pool_generator()
+    #path = r"C:\Users\Aurora\new-DeepJanus\DeepJanus\DeepJanus-BNG\data\member_seeds\initial_pool"
     initial_population_generator(path)

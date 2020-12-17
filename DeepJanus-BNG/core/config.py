@@ -2,6 +2,7 @@ class Config:
     GEN_RANDOM = 'GEN_RANDOM'
     GEN_RANDOM_SEEDED = 'GEN_RANDOM_SEEDED'
     GEN_SEQUENTIAL_SEEDED = 'GEN_SEQUENTIAL_SEEDED'
+    GEN_DIVERSITY = 'GEN_DIVERSITY'
 
 
     SEG_LENGTH = 25
@@ -14,8 +15,8 @@ class Config:
     def __init__(self):
         self.experiment_name = 'exp'
         self.fitness_weights = (1.0, -1.0)
-
-        self.POPSIZE = 12
+        self.POOLSIZE = 6
+        self.POPSIZE = 4
         self.NUM_GENERATIONS = 150
 
         self.RESEED_UPPER_BOUND = int(self.POPSIZE * 0.1)
@@ -33,10 +34,12 @@ class Config:
 
         #self.generator_name = Config.GEN_RANDOM
         #self.generator_name = Config.GEN_RANDOM_SEEDED
-        self.generator_name = Config.GEN_SEQUENTIAL_SEEDED
+        # self.generator_name = Config.GEN_SEQUENTIAL_SEEDED
+        self.generator_name = Config.GEN_DIVERSITY
         #self.seed_folder = 'population_HQ1'
 
-        self.seed_folder = 'random_population'
+        self.seed_folder = 'initial_pool'
+        self.initial_population_folder = "initial_population"
 
-        self.RUNTIME = 3600
-        self.INTERVAL = 900
+        self.RUNTIME = 180
+        self.INTERVAL = 60
