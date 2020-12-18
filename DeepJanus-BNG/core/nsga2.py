@@ -104,6 +104,8 @@ def main(problem: Problem = None, seed=None):
             logbook.record(gen=gen, evals=len(invalid_ind), **record)
             print(logbook.stream)
             problem.on_iteration(gen, pop, logbook)
+        else:
+            break
     return pop, logbook
 
 

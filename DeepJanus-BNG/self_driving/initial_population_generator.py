@@ -50,7 +50,7 @@ def initial_pool_generator(config, problem):
         member = problem.member_class().from_dict(member.to_dict())
         member.config = config
         member.problem = problem
-        member.clear_evaluation()
+        #member.clear_evaluation()
 
         member.distance_to_boundary = None
         good_members_found += 1

@@ -15,8 +15,8 @@ class Config:
     def __init__(self):
         self.experiment_name = 'exp'
         self.fitness_weights = (1.0, -1.0)
-        self.POOLSIZE = 6
-        self.POPSIZE = 4
+        self.POOLSIZE = 40
+        self.POPSIZE = 12
         self.NUM_GENERATIONS = 150
 
         self.RESEED_UPPER_BOUND = int(self.POPSIZE * 0.1)
@@ -41,5 +41,5 @@ class Config:
         self.seed_folder = 'initial_pool'
         self.initial_population_folder = "initial_population"
 
-        self.RUNTIME = 180
-        self.INTERVAL = 60
+        self.RUNTIME = 36000
+        self.INTERVAL = 3600
