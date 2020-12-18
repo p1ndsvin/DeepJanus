@@ -7,6 +7,7 @@ from deap import tools
 
 from core.log_setup import get_logger
 from core.problem import Problem
+from core.config import Config
 
 log = get_logger(__file__)
 
@@ -70,39 +71,41 @@ def main(problem: Problem = None, seed=None):
     for gen in range(1, config.NUM_GENERATIONS):
         # invalid_ind = [ind for ind in pop]
 
+        if Config.EXECTIME <= config.RUNTIME:
+            # fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
+            # for ind, fit in zip(invalid_ind, fitnesses):
+            #    ind.fitness.values = fit
 
-        # fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
-        # for ind, fit in zip(invalid_ind, fitnesses):
-        #    ind.fitness.values = fit
+            # Vary the population
+            offspring = tools.selTournamentDCD(pop, len(pop))
+            offspring = [ind.clone() for ind in offspring]
 
-        # Vary the population
-        offspring = tools.selTournamentDCD(pop, len(pop))
-        offspring = [ind.clone() for ind in offspring]
+            problem.reseed(pop, offspring)
 
-        problem.reseed(pop, offspring)
+            for ind1, ind2 in zip(offspring[::2], offspring[1::2]):
+                toolbox.mutate(ind1)
+                toolbox.mutate(ind2)
+                del ind1.fitness.values, ind2.fitness.values
 
-        for ind1, ind2 in zip(offspring[::2], offspring[1::2]):
-            toolbox.mutate(ind1)
-            toolbox.mutate(ind2)
-            del ind1.fitness.values, ind2.fitness.values
+            # Evaluate the individuals with an invalid fitness
+            to_eval = offspring + pop
+            invalid_ind = [ind for ind in to_eval]
 
-        # Evaluate the individuals with an invalid fitness
-        to_eval = offspring + pop
-        invalid_ind = [ind for ind in to_eval]
+            problem.pre_evaluate_members(invalid_ind)
 
-        problem.pre_evaluate_members(invalid_ind)
+            fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
+            for ind, fit in zip(invalid_ind, fitnesses):
+                ind.fitness.values = fit
 
-        fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
-        for ind, fit in zip(invalid_ind, fitnesses):
-            ind.fitness.values = fit
-
-        problem.archive.process_population(offspring + pop)
-        # Select the next generation population
-        pop = toolbox.select(pop + offspring, config.POPSIZE)
-        record = stats.compile(pop)
-        logbook.record(gen=gen, evals=len(invalid_ind), **record)
-        print(logbook.stream)
-        problem.on_iteration(gen, pop, logbook)
+            problem.archive.process_population(offspring + pop)
+            # Select the next generation population
+            pop = toolbox.select(pop + offspring, config.POPSIZE)
+            record = stats.compile(pop)
+            logbook.record(gen=gen, evals=len(invalid_ind), **record)
+            print(logbook.stream)
+            problem.on_iteration(gen, pop, logbook)
+        else:
+            break
     return pop, logbook
 
 

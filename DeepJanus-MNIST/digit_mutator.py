@@ -3,7 +3,7 @@ import mutation_manager
 import rasterization_tools
 import vectorization_tools
 from digit_input import Digit
-from properties import MUTOPPROB, EXPECTED_LABEL
+from properties import MUTOPPROB, EXPECTED_LABEL, DISTANCE
 from utils import get_distance
 
 
@@ -12,7 +12,7 @@ class DigitMutator:
     def __init__(self, digit):
         self.digit = digit
 
-    def mutate(self, reference=None):
+    def mutate(self, reference=None, seed=None):
         # Select mutation operator.
         rand_mutation_probability = random.uniform(0, 1)
         if rand_mutation_probability >= MUTOPPROB:
@@ -32,8 +32,9 @@ class DigitMutator:
 
             if distance_inputs != 0:
                 if reference is not None:
+                    distance_seed = get_distance(rasterized_digit, seed.purified)
                     distance_inputs = get_distance(reference.purified, rasterized_digit)
-                    if distance_inputs != 0:
+                    if distance_inputs != 0 and distance_seed <= DISTANCE:
                         condition = False
                 else:
                     condition = False

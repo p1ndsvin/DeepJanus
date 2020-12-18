@@ -8,6 +8,8 @@ def evaluate_ff1(A, B):
     return dist
 
 
+
+
 # calculate the misclassification ff
 def evaluate_ff2(P_class_A, P_notclass_A, P_class_B, P_notclass_B):
     P1 = P_class_A - P_notclass_A

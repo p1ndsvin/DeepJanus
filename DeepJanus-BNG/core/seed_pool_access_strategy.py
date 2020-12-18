@@ -26,6 +26,8 @@ class SeedPoolAccessStrategy:
             seed = self.get_member_randomly()
         elif generator_name == Config.GEN_SEQUENTIAL_SEEDED:
             seed = self.get_member_circular()
+        elif generator_name == Config.GEN_DIVERSITY:
+            seed = self.get_member_circular()
         else:
             raise NotImplemented(generator_name)
         return seed

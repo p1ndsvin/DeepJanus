@@ -94,6 +94,9 @@ class BeamNGIndividual(Individual):
                 'm2': self.m2.to_dict(),
                 'seed': self.seed.to_dict()}
 
+    def get_members(self):
+        return self.m1, self.m2
+
     @classmethod
     def from_dict(self, d):
         m1 = BeamNGMember.from_dict(d['m1'])

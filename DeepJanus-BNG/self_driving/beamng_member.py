@@ -33,6 +33,7 @@ class BeamNGMember(Member):
         self.config: BeamNGConfig = None
         self.problem: 'BeamNGProblem' = None
         self._evaluator: BeamNGEvaluator = None
+        self.simulation = None
 
     def clone(self):
         res = BeamNGMember(list(self.control_nodes), list(self.sample_nodes), self.num_spline_nodes, self.road_bbox)

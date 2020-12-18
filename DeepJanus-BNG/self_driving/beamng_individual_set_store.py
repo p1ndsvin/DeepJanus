@@ -49,20 +49,43 @@ class _BeamNGIndividualCompositeMembersStore:
         ind_path = self.folder.joinpath(prefix + '.json')
         ind_path.write_text(json.dumps(ind.to_dict()))
 
-        fig, (left, right) = plt.subplots(ncols=2)
-        fig.set_size_inches(15, 10)
-        ml, mr = ind.members_by_distance_to_boundary()
+        m1 , m2 = ind.get_members()
+        # fig, (left, right) = plt.subplots(ncols=2)
+        # fig.set_size_inches(15, 10)
+        # ml, mr = ind.members_by_distance_to_boundary()
 
-        def plot(member: BeamNGMember, ax):
-            ax.set_title(f'dist to bound ~ {np.round(member.distance_to_boundary, 2)}', fontsize=12)
-            road_points = RoadPoints.from_nodes(member.sample_nodes)
-            road_points.plot_on_ax(ax)
+        # def plot(member: BeamNGMember, ax):
+        #     ax.set_title(f'dist to bound ~ {np.round(member.distance_to_boundary, 2)}', fontsize=12)
+        #     road_points = RoadPoints.from_nodes(member.sample_nodes)
+        #     road_points.plot_on_ax(ax)
+        #
+        # plot(ml, left)
+        # plot(mr, right)
+        # fig.suptitle(f'members distance = {ind.members_distance} ; oob_ff = {ind.oob_ff}')
+        # fig.savefig(self.folder.joinpath(prefix + '_both_roads.svg'))
+        # plt.close(fig)
 
-        plot(ml, left)
-        plot(mr, right)
-        fig.suptitle(f'members distance = {ind.members_distance} ; oob_ff = {ind.oob_ff}')
-        fig.savefig(self.folder.joinpath(prefix + '_both_roads.svg'))
-        plt.close(fig)
+
+
+        sim_path1 = self.folder.joinpath(prefix + '_1_simulation.json')
+        sim_path2 = self.folder.joinpath(prefix + '_2_simulation.json')
+        if m1.simulation != None:
+            with open(sim_path1, 'w') as f:
+                f.write(json.dumps({
+                    m1.simulation.f_params: m1.simulation.params._asdict(),
+                    m1.simulation.f_info: m1.simulation.info.__dict__,
+                    m1.simulation.f_road: m1.simulation.road.to_dict(),
+                    m1.simulation.f_records: [r._asdict() for r in m1.simulation.states]
+                }))
+        if m2.simulation != None:
+            with open(sim_path2, 'w') as f:
+                f.write(json.dumps({
+                    m2.simulation.f_params: m2.simulation.params._asdict(),
+                    m2.simulation.f_info: m2.simulation.info.__dict__,
+                    m2.simulation.f_road: m2.simulation.road.to_dict(),
+                    m2.simulation.f_records: [r._asdict() for r in m2.simulation.states]
+                }))
+
 
     def load(self, prefix: str) -> BeamNGIndividual:
         ind_path = self.folder.joinpath(prefix + '.json')
