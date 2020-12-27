@@ -11,6 +11,7 @@ class DigitMutator:
 
     def __init__(self, digit):
         self.digit = digit
+        self.seed = digit.seed
 
     def mutate(self, reference=None):
         # Select mutation operator.
@@ -72,8 +73,8 @@ class DigitMutator:
             if distance_inputs != 0:
                 condition = False
 
-        first_digit = Digit(v1_xml_desc, self.digit.expected_label)
-        second_digit = Digit(v2_xml_desc, self.digit.expected_label)
+        first_digit = Digit(v1_xml_desc, self.digit.expected_label, self.seed)
+        second_digit = Digit(v2_xml_desc, self.digit.expected_label, self.seed)
         first_digit.purified = rasterized_digit1
         second_digit.purified = rasterized_digit2
         return first_digit, second_digit, distance_inputs

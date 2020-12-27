@@ -1,35 +1,33 @@
+from datetime import datetime
 import random
 
 import vectorization_tools
 from digit_input import Digit
 from digit_mutator import DigitMutator
 from predictor import Predictor
-from utils import print_archive
+from timer import Timer
+from utils import print_archive, get_distance, reshape, print_archive_experiment
 
 import numpy as np
 from deap import base, creator, tools
 from deap.tools.emo import selNSGA2
 from tensorflow import keras
 
-import h5py
-
 import archive_manager
 from individual import Individual
 from properties import NGEN, \
     POPSIZE, INITIALPOP, \
-    RESEEDUPPERBOUND, GENERATE_ONE_ONLY, DATASET
+    RESEEDUPPERBOUND, GENERATE_ONE_ONLY, ORIGINAL_SEEDS, EXPECTED_LABEL, RUNTIME
 
 # Load the dataset.
-hf = h5py.File(DATASET, 'r')
-x_test = hf.get('xn')
-x_test = np.array(x_test)
-y_test = hf.get('yn')
-y_test = np.array(y_test)
+mnist = keras.datasets.mnist
+(x_train, y_train), (x_test, y_test) = mnist.load_data()
 
 # Fetch the starting seeds from file
-starting_seeds = [i for i in range(len(y_test))]
-random.shuffle(starting_seeds)
-starting_seeds = starting_seeds[:POPSIZE]
+with open(ORIGINAL_SEEDS) as f:
+    starting_seeds = f.read().split(',')[:-1]
+    random.shuffle(starting_seeds)
+    starting_seeds = starting_seeds[:POPSIZE]
 
 # DEAP framework setup.
 toolbox = base.Toolbox()
@@ -42,8 +40,9 @@ creator.create("Individual", Individual, fitness=creator.FitnessMulti)
 def generate_digit(seed):
     seed_image = x_test[int(seed)]
     label = y_test[int(seed)]
+    assert(label == EXPECTED_LABEL)
     xml_desc = vectorization_tools.vectorize(seed_image)
-    return Digit(xml_desc, label)
+    return Digit(xml_desc, label, seed)
 
 
 def generate_individual():
@@ -141,6 +140,7 @@ def pre_evaluate_batch(invalid_ind):
             member.correctly_classified = True
         else:
             member.correctly_classified = False
+        list_all.append(member)
 
 
 def main(rand_seed=None):
@@ -185,9 +185,10 @@ def main(rand_seed=None):
     record = stats.compile(population)
     logbook.record(gen=0, evals=len(invalid_ind), **record)
     print(logbook.stream)
-
+    gen = 1
     # Begin the generational process
-    for gen in range(1, NGEN):
+    while Timer.has_budget():
+    #for gen in range(1, NGEN):
         # Vary the population.
         offspring = tools.selTournamentDCD(population, len(population))
         offspring = [toolbox.clone(ind) for ind in offspring]
@@ -230,6 +231,7 @@ def main(rand_seed=None):
         record = stats.compile(population)
         logbook.record(gen=gen, evals=len(invalid_ind), **record)
         print(logbook.stream)
+        gen += 1
 
     print(logbook.stream)
 
@@ -238,8 +240,14 @@ def main(rand_seed=None):
 
 if __name__ == "__main__":
     archive = archive_manager.Archive()
+    list_all = list()
     pop = main()
+    for digit in list_all:
+        seed = reshape(x_test[int(digit.seed)])
+        if get_distance(digit.purified, seed) < 2.0:
+            digit.export(all=True)
 
+    print_archive_experiment(archive.get_archive())
     print_archive(archive.get_archive())
     archive.create_report(x_test, Individual.SEEDS, 'final')
     print("GAME OVER")

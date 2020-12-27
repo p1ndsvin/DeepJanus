@@ -7,13 +7,14 @@ from utils import get_distance
 from evaluator import eval_archive_dist
 import numpy as np
 
-from properties import ARCHIVE_THRESHOLD, RESULTS_PATH, POPSIZE, NGEN, MUTLOWERBOUND, MUTUPPERBOUND, \
+from properties import ARCHIVE_THRESHOLD, POPSIZE, NGEN, MUTLOWERBOUND, MUTUPPERBOUND, \
     RESEEDUPPERBOUND, K_SD, MODEL
 from metrics import get_diameter, get_mindist_seed
 
+from folder import Folder
+
 
 class Archive:
-
     def __init__(self):
         self.archive = list()
         self.archived_seeds = set()
@@ -125,6 +126,7 @@ class Archive:
             'std_members_dist': str(stats[3]),
         }
 
+        RESULTS_PATH = Folder.DST
         if not exists(RESULTS_PATH):
             makedirs(RESULTS_PATH)
         dst = RESULTS_PATH + f'/report_'+str(generation)+'.json'

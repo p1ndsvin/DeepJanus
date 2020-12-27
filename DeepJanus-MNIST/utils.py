@@ -1,13 +1,18 @@
+import matplotlib
+
+from folder import Folder
+
+matplotlib.use('Agg')
+
+
 from os import makedirs
-from os.path import exists, basename
-from shutil import copyfile
+from os.path import exists, basename, join
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 
 from tensorflow import keras
 
-from predictor import Predictor
-from properties import MODEL, IMG_SIZE, RESULTS_PATH
+from properties import MODEL, IMG_SIZE
 import numpy as np
 
 # load the MNIST dataset
@@ -32,13 +37,13 @@ def get_distance(v1, v2):
 
 
 def print_archive(archive):
-    path = RESULTS_PATH+'/archive'
-    dst = path + '/'
+    dst = Folder.DST_ARC+"_DJ"
     if not exists(dst):
         makedirs(dst)
+
     for i, ind in enumerate(archive):
-        filename1 = dst + basename(
-            'archived_' + str(i) + '_mem1_l_' + str(ind.member1.predicted_label) + '_seed_' + str(ind.seed))
+        filename1 = join(dst, basename(
+            'archived_' + str(i) + '_mem1_l_' + str(ind.member1.predicted_label) + '_seed_' + str(ind.seed)))
         plt.imsave(filename1, ind.member1.purified.reshape(28, 28), cmap=cm.gray, format='png')
         #loaded_label = (Predictor.predict(ind.member1.purified))
         #assert (ind.member1.predicted_label == loaded_label[0])
@@ -48,8 +53,8 @@ def print_archive(archive):
         #assert (ind.member1.predicted_label == loaded_label)
         assert (np.array_equal(ind.member1.purified, np.load(filename1 + '.npy')))
 
-        filename2 = dst + basename(
-            'archived_' + str(i) + '_mem2_l_' + str(ind.member2.predicted_label) + '_seed_' + str(ind.seed))
+        filename2 = join(dst, basename(
+            'archived_' + str(i) + '_mem2_l_' + str(ind.member2.predicted_label) + '_seed_' + str(ind.seed)))
         plt.imsave(filename2, ind.member2.purified.reshape(28, 28), cmap=cm.gray, format='png')
         #loaded_label = (Predictor.predict(ind.member2.purified))
         #assert (ind.member2.predicted_label == loaded_label[0])
@@ -58,6 +63,19 @@ def print_archive(archive):
         #loaded_label = Predictor.predict(np.load(filename2 + '.npy'))[0]
         #assert (ind.member2.predicted_label == loaded_label)
         assert (np.array_equal(ind.member2.purified, np.load(filename2 + '.npy')))
+
+
+def print_archive_experiment(archive):
+    for i, ind in enumerate(archive):
+        digit = ind.member1
+        seed = reshape(x_test[int(digit.seed)])
+        if get_distance(digit.purified, seed) < 2.0:
+            digit.export()
+
+        digit = ind.member2
+        seed = reshape(x_test[int(digit.seed)])
+        if get_distance(digit.purified, seed) < 2.0:
+            digit.export()
 
 
 # Useful function that shapes the input in the format accepted by the ML model.
