@@ -10,7 +10,10 @@ from os.path import exists, basename, join
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 
-from tensorflow import keras
+#from tensorflow import keras
+import keras
+
+
 
 from properties import MODEL, IMG_SIZE
 import numpy as np

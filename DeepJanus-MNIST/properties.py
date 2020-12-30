@@ -2,6 +2,19 @@
 import os
 from datetime import datetime
 
+class MissingEnvironmentVariable(Exception):
+    pass
+
+## The following variable are mandatory but cannot have a default value, so we raise an exception it they
+#   are missing
+try:
+    RUN = int(os.environ['RUN_ID'])
+except KeyError:
+    raise MissingEnvironmentVariable("RUN_ID does not exist. Please specify a value for this ENV variable")
+except Exception:
+    raise MissingEnvironmentVariable("Some other error?")
+
+
 now = datetime.now().strftime("%Y%m%d%H%M%S")
 
 # GA Setup
@@ -60,5 +73,3 @@ GENERATE_ONE_ONLY = False
 # Directories
 DIR_PATH           =  os.getenv('DIR_PATH','logs/log_' + str(now) + "_all")
 NOW             = os.getenv('NOW',str(now))
-
-RUN             = os.getenv('RUN', '0')

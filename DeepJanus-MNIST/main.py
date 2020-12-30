@@ -1,6 +1,9 @@
 from datetime import datetime
 import random
 
+# Make sure we load all the properties
+import properties
+
 import vectorization_tools
 from digit_input import Digit
 from digit_mutator import DigitMutator
@@ -11,7 +14,9 @@ from utils import print_archive, get_distance, reshape, print_archive_experiment
 import numpy as np
 from deap import base, creator, tools
 from deap.tools.emo import selNSGA2
-from tensorflow import keras
+#from tensorflow import keras
+import keras
+
 
 import archive_manager
 from individual import Individual
