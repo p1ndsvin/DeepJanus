@@ -1,14 +1,14 @@
 import json
 import sys
 from os import makedirs
-from os.path import exists
+from os.path import exists, join
 
 from utils import get_distance
 from evaluator import eval_archive_dist
 import numpy as np
 
 from properties import ARCHIVE_THRESHOLD, POPSIZE, NGEN, MUTLOWERBOUND, MUTUPPERBOUND, \
-    RESEEDUPPERBOUND, K_SD, MODEL
+    RESEEDUPPERBOUND, K_SD, MODEL, EXPECTED_LABEL, RUNTIME, RUN
 from metrics import get_diameter, get_mindist_seed
 
 from folder import Folder
@@ -138,21 +138,26 @@ class Archive:
 
         config = {
             'popsize': str(POPSIZE),
-            'generations': str(NGEN),
-            'label': str(ind.member1.expected_label),
+            'label': str(EXPECTED_LABEL),
             'archive tshd': str(ARCHIVE_THRESHOLD),
             'mut low': str(MUTLOWERBOUND),
             'mut up': str(MUTUPPERBOUND),
             'reseed': str(RESEEDUPPERBOUND),
             'K': str(K_SD),
-            'model': str(MODEL)
+            'model': str(MODEL),
+            'runtime': str(RUNTIME),
+            'run': str(RUN)
         }
-        dst = RESULTS_PATH + '/config.json'
-        config_string = json.dumps(config)
+        filedest = join(Folder.DST, "config.json")
+        with open(filedest, 'w') as f:
+            (json.dump(config, f, sort_keys=True, indent=4))
+            
+        #dst = RESULTS_PATH + '/config.json'
+        #config_string = json.dumps(config)
 
-        file = open(dst, 'w')
-        file.write(config_string)
-        file.close()
+        #file = open(dst, 'w')
+        #file.write(config_string)
+        #file.close()
 
     def get_seeds(self):
         seeds = set()

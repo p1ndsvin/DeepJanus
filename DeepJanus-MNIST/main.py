@@ -249,8 +249,7 @@ if __name__ == "__main__":
     pop = main()
     for digit in list_all:
         seed = reshape(x_test[int(digit.seed)])
-        if get_distance(digit.purified, seed) < 2.0:
-            digit.export(all=True)
+        digit.export(all=True)
 
     print_archive_experiment(archive.get_archive())
     print_archive(archive.get_archive())

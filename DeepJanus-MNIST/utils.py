@@ -71,14 +71,10 @@ def print_archive(archive):
 def print_archive_experiment(archive):
     for i, ind in enumerate(archive):
         digit = ind.member1
-        seed = reshape(x_test[int(digit.seed)])
-        if get_distance(digit.purified, seed) < 2.0:
-            digit.export()
+        digit.export()
 
         digit = ind.member2
-        seed = reshape(x_test[int(digit.seed)])
-        if get_distance(digit.purified, seed) < 2.0:
-            digit.export()
+        digit.export()
 
 
 # Useful function that shapes the input in the format accepted by the ML model.
