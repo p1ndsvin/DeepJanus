@@ -3,7 +3,10 @@ from os import makedirs
 from os.path import exists
 
 import h5py
-from tensorflow import keras
+
+#from tensorflow import keras
+import keras
+
 import sys
 from properties import DATASET, POPSIZE, MODEL, MODEL2, EXPLABEL
 import numpy as np
