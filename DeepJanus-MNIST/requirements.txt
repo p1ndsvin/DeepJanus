@@ -1,5 +1,5 @@
 cairocffi==0.9.0
-CairoSVG==2.2.1
+CairoSVG==2.5.1
 cffi==1.11.5
 deap==1.2.2
 grpcio==1.16.1
