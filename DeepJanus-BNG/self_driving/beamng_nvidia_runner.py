@@ -53,15 +53,17 @@ class BeamNGNvidiaOob(BeamNGEvaluator):
                     log.info(f'{member} BeamNG evaluation start')
                 if attempt > 2:
                     time.sleep(5)
-                sim = self._run_simulation(member.sample_nodes)
+                sim = self._run_simulation(member)
                 if sim.info.success:
                     Config.EXECTIME = Config.EXECTIME + sim.states[-1].timer
+                    print("Execution time: ", Config.EXECTIME)
                     break
 
             member.distance_to_boundary = sim.min_oob_distance()
             log.info(f'{member} BeamNG evaluation completed')
 
-    def _run_simulation(self, nodes) -> SimulationData:
+    def _run_simulation(self, member) -> SimulationData:
+        nodes = member.sample_nodes
         if not self.brewer:
             self.brewer = BeamNGBrewer()
             self.vehicle = self.brewer.setup_vehicle()
@@ -119,6 +121,7 @@ class BeamNGNvidiaOob(BeamNGEvaluator):
             traceback.print_exception(type(ex), ex, ex.__traceback__)
         finally:
             if self.config.simulation_save:
+                member.simulation = sim_data_collector.get_simulation_data()
                 sim_data_collector.save()
                 try:
                     sim_data_collector.take_car_picture_if_needed()

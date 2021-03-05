@@ -11,10 +11,8 @@ class SeedPoolFolder(SeedPool):
     def __init__(self, problem: Problem, folder_name):
         super().__init__(problem)
         self.storage = SeedStorage(folder_name)
-        print(folder_name)
         self.file_path_list = self.storage.all_files()
-        print(self.file_path_list)
-        #assert (len(self.file_path_list)) > 0
+        assert (len(self.file_path_list)) > 0
         self.cache: Dict[str, Member] = {}
 
     def __len__(self):
